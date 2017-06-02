@@ -7,7 +7,7 @@ from abstractcollection import AbstractCollection
 from bstnode import BSTNode
 from linkedstack import LinkedStack
 from linkedqueue import LinkedQueue
-from math import log
+import math
 
 
 class LinkedBST(AbstractCollection):
@@ -63,7 +63,7 @@ class LinkedBST(AbstractCollection):
                 recurse(node.right)
 
         recurse(self._root)
-        return iter(lyst)
+        return lyst
 
     def postorder(self):
         """Supports a postorder traversal on a view of self."""
@@ -236,15 +236,41 @@ class LinkedBST(AbstractCollection):
         def height1(top):
             '''
             Helper function
-            :param top:
-            :return:
+            :param top: top of the tree (root)
+            :return: height of the tree
             '''
+            if top is None:
+                return 0
+            else:
+                left_height = height1(top.left)
+                right_height = height1(top.right)
+                if left_height < 0 or right_height < 0 or abs(left_height - right_height) > 1:
+                    return -1
+                return max(left_height, right_height) + 1
+        return height1(self._root)
 
     def isBalanced(self):
         '''
         Return True if tree is balanced
         :return:
         '''
+        vertices = 0
+        for char in self.__str__():
+            if char != '|' and char != ' ' and char != '\n':
+                vertices += 1
+        return True if self.height() < pow(2, int(math.log(2*vertices))) else False
+
+    def rebalance(self):
+        '''
+        Rebalances the tree.
+        :return:
+        '''
+        lst = self.inorder()
+        self.clear()
+        print(self)
+        print(lst)
+
+
 
     def rangeFind(self, low, high):
         '''
@@ -254,11 +280,6 @@ class LinkedBST(AbstractCollection):
         :return:
         '''
 
-    def rebalance(self):
-        '''
-        Rebalances the tree.
-        :return:
-        '''
 
     def successor(self, item):
         """
